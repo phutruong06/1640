@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Areas",
+    "\\Areas\\Identity",
+    "\\Areas\\Identity\\Pages",
+    "\\bin",
+    "\\bin\\Debug",
+    "\\Data",
+    "\\Migrations",
+    "\\Models",
+    "\\Views",
+    "\\Views\\DepartmentUsers",
+    "\\Views\\Home"
+  ],
+  "PreviewInSolutionExplorer": false
+}

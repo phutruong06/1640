@@ -1,0 +1,142 @@
+﻿@*@model IEnumerable<ESD.Models.Idea>*@
+
+@model PagedList.IPagedList<ESD.Models.Idea>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+@{
+    ViewBag.Title = "Ideas";
+}
+
+@{
+    ViewData["Title"] = "Index";
+    var users = (List<Microsoft.AspNetCore.Identity.IdentityUser>)ViewData["users"];
+    var currentUser = (Microsoft.AspNetCore.Identity.IdentityUser)ViewData["currentUser"];
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+<h1>IDEA</h1>
+
+<button style="border-radius: 15px; background-color: yellow;">
+    <a asp-action="Create" style="color: black">Create New</a>
+</button>
+
+<form asp-action="SearchResults" class="d-flex">
+    <label for="SearchPhrase" class="control-label"></label>
+    <input class="form-control me-2" name="SearchPhrase" />
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+<div>
+    <a asp-action="Index"><button><i class='fas fa-undo-alt'></i></button></a>
+</div>
+
+<table id="customers">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Text)*@
+                Text
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.FilePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Datetime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAnomynous)
+            </th>*@
+            <th>
+                @*@Html.DisplayNameFor(model => model.LikeS)*@
+                LikeS
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.DislikeS)*@
+                DislikeS
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ViewS)*@
+                ViewS
+            </th>
+            <th>
+                User email
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Topic)
+            </th>*@
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.FilePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Datetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAnomynous)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.LikeS) <br />
+                <a asp-action="React" asp-route-id="@item.Id" asp-route-reactT="@true">Like</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DislikeS) <br />
+                <a asp-action="React" asp-route-id="@item.Id" asp-route-reactT="@false">Dislike</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ViewS)
+            </td>
+            <td>
+                    @if (!item.IsAnomynous)
+                    {
+                        @users.Where(u => u.Id == item.UserId).FirstOrDefault().Email;
+                    }
+                    else
+                    {
+                                    <p>Anomynous</p>
+                    }
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.Category.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topic.Id)
+            </td>*@
+            <td>
+                @if (DateTime.Now < item.Topic.CloseDate_1 && users.Where(u => u.Id == item.UserId).FirstOrDefault() == currentUser)
+                {
+                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                } |
+                @if (DateTime.Now < item.Topic.CloseDate_2)
+                {
+                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                } |
+                @if (DateTime.Now < item.Topic.CloseDate_1 && users.Where(u => u.Id == item.UserId).FirstOrDefault() == currentUser)
+                {
+                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
